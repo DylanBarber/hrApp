@@ -10,6 +10,7 @@ const sql = mysql.createConnection({
   database: "users"
 });
 app.get("/users", (req, res) => {
+
   const fetchUsers = async() => {
     const response = await fetch("https://randomuser.me/api/?nat=us");
       const body = await response.json();
@@ -29,6 +30,9 @@ app.get("/users", (req, res) => {
 
 
       };
+      sql.connect();
+      sql.query(`INSERT INTO users (fname, lname, email, phone, street, city, state, dob, hireDate) VALUES ('${userObj.fname}', '${userObj.lname}', '${userObj.email}', '${userObj.phone}', '${userObj.street}', '${userObj.city}', '${userObj.state}', '${userObj.dob}', '${userObj.hireDate}')`);
+      sql.end();
       res.json(userObj);
   };
   fetchUsers();

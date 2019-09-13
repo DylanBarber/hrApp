@@ -9,10 +9,17 @@ const sql = mysql.createConnection({
   password: process.env.SQL_PASSWORD,
   database: "users"
 });
-app.get("/users", (req, res) => {
+sql.connect();
+// app.get("/users", (req, res) => {
+  
+// });
+for (let i = 1; i < 101; i++) {
+  setTimeout(() => {
 
-  const fetchUsers = async() => {
-    const response = await fetch("https://randomuser.me/api/?nat=us");
+
+
+    const fetchUsers = async () => {
+      const response = await fetch("https://randomuser.me/api/?nat=us");
       const body = await response.json();
       if (response.status !== 200) {
         throw Error(body.message);
@@ -30,13 +37,13 @@ app.get("/users", (req, res) => {
 
 
       };
-      sql.connect();
+
       sql.query(`INSERT INTO users (fname, lname, email, phone, street, city, state, dob, hireDate) VALUES ('${userObj.fname}', '${userObj.lname}', '${userObj.email}', '${userObj.phone}', '${userObj.street}', '${userObj.city}', '${userObj.state}', '${userObj.dob}', '${userObj.hireDate}')`);
-      sql.end();
-      res.json(userObj);
-  };
-  fetchUsers();
-});
+      // res.json(userObj);
+    };
+    fetchUsers();
+  }, 5000);
+}
 //Math.floor(Math.random() * 100000)
 
 // app.get("/users", (req, res) => {
@@ -48,10 +55,10 @@ app.get("/users", (req, res) => {
 //     return;
 //   });
 // });
+// sql.end();
+// const port = process.env.PORT || 25565;
+// app.listen(port, () => {
+//   console.log(`Listening on port ${port}`);
 
-const port = process.env.PORT || 25565; 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-
-});
+// });
 

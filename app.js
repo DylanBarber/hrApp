@@ -11,6 +11,36 @@ const sql = mysql.createConnection({
 });
 sql.connect();
 
+//POST
+app.post("/users", (req, res) => {
+  if (!req.query.fname || !req.query.lname || !req.query.email || !req.query.phone || !req.query.street || !req.query.city || !req.query.state || !req.query.dob || !req.query.hireDate){
+    res.send("You are missing a field. All fields are required in query (fname, lname, email, phone, street, city, state, dob, hireDate");
+  } else {
+    const userObj = {
+      fname: req.query.fname,
+      lname: req.query.lname,
+      email: req.query.email,
+      phone: req.query.phone,
+      street: req.query.street,
+      city: req.query.city,
+      state: req.query.state,
+      dob: req.query.dob,
+      hireDate: req.query.hireDate,
+    };
+    sql.query(`INSERT INTO users (fname, lname, email, phone, street, city, state, dob, hireDate) 
+      VALUES ('${userObj.fname}', 
+              '${userObj.lname}', 
+              '${userObj.email}', 
+              '${userObj.phone}', 
+              '${userObj.street}', 
+              '${userObj.city}', 
+              '${userObj.state}', 
+              '${userObj.dob}', 
+              '${userObj.hireDate}')`);
+    res.send(`The following user was added to the database ${JSON.stringify(userObj)}`);
+  }
+});
+
 //GET
 app.get("/users", (req, res) => {
   if (req.query.id) {

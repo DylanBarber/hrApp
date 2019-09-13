@@ -12,8 +12,8 @@ const sql = mysql.createConnection({
 sql.connect();
 
 //POST
-app.post("/users", (req, res) => {
-  if (!req.query.fname || !req.query.lname || !req.query.email || !req.query.phone || !req.query.street || !req.query.city || !req.query.state || !req.query.dob || !req.query.hireDate){
+app.post("/employees", (req, res) => {
+  if (!req.query.fname || !req.query.lname || !req.query.email || !req.query.phone || !req.query.street || !req.query.city || !req.query.state || !req.query.dob || !req.query.hireDate) {
     res.send("You are missing a field. All fields are required in query (fname, lname, email, phone, street, city, state, dob, hireDate");
   } else {
     const userObj = {
@@ -27,24 +27,28 @@ app.post("/users", (req, res) => {
       dob: req.query.dob,
       hireDate: req.query.hireDate,
     };
-    sql.query(`INSERT INTO users (fname, lname, email, phone, street, city, state, dob, hireDate) 
-      VALUES ('${userObj.fname}', 
-              '${userObj.lname}', 
-              '${userObj.email}', 
-              '${userObj.phone}', 
-              '${userObj.street}', 
-              '${userObj.city}', 
-              '${userObj.state}', 
-              '${userObj.dob}', 
-              '${userObj.hireDate}')`);
+    sql.query("INSERT INTO users (fname, lname, email, phone, street, city, state, dob, hireDate) VALUES (?,?,?,?,?,?,?,?,?);",
+      [
+        `${userObj.fname}`,
+        `${userObj.lname}`,
+        `${userObj.email}`,
+        `${userObj.phone}`,
+        `${userObj.street}`,
+        `${userObj.city}`,
+        `${userObj.state}`,
+        `${userObj.dob}`,
+        `${userObj.hireDate}`
+      ], (err) => {
+        if (err) throw err;
+      });
     res.send(`The following user was added to the database ${JSON.stringify(userObj)}`);
   }
 });
 
 //GET
-app.get("/users", (req, res) => {
+app.get("/employees", (req, res) => {
   if (req.query.id) {
-    sql.query(`SELECT * FROM USERS WHERE employeeID=${req.query.id}`, (err, rows) => {
+    sql.query("SELECT * FROM USERS WHERE employeeID=?", [`${req.query.id}`], (err, rows) => {
       if (err) throw err;
       if (rows.length !== 0) {
         res.send(rows);

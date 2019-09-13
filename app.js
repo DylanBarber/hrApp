@@ -16,7 +16,20 @@ app.get("/users", (req, res) => {
       if (response.status !== 200) {
         throw Error(body.message);
       }
-      res.json(body.results);
+      const userObj = {
+        fname: body.results[0].name.first,
+        lname: body.results[0].name.last,
+        email: body.results[0].email,
+        phone: body.results[0].phone,
+        street: body.results[0].location.street,
+        city: body.results[0].location.city,
+        state: body.results[0].location.state,
+        dob: body.results[0].dob.date,
+        hireDate: body.results[0].registered.date
+
+
+      };
+      res.json(userObj);
   };
   fetchUsers();
 });

@@ -71,3 +71,44 @@ app.listen(port, () => {
 
 });
 
+//PUT - Still need to make copy of user object, multiple ifs to set updated variables, and then update SQL server
+app.put("/employees", (req, res) => {
+  sql.query("SELECT * FROM USERS WHERE employeeID=?", [`${req.query.id}`], (err, rows) => {
+    if (err) throw err;
+    if (rows.length !== 0) {
+      const employee = rows[0];
+      if (req.query.fname){
+        employee.fname = req.query.fname;
+      }
+      if (req.query.lname){
+        employee.fname = req.query.lname;
+      }
+      if (req.query.email){
+        employee.email = req.query.email; 
+      }
+      if (req.query.phone){
+        employee.phone = req.query.phone;
+      }
+      if (req.query.street){
+        employee.street = req.query.street;
+      }
+      if (req.query.city){
+        employee.city = req.query.city;
+      }
+      if (req.query.state){
+        employee.state = req.query.state;
+      }
+      if (req.query.dob){
+        employee.dob = req.query.dob;
+      }
+      if (req.query.hireDate){
+        employee.hireDate = req.query.hireDate;
+      }
+      res.send(employee);
+    } else {
+      res.status(404);
+      res.send("Employee not found");
+      return;
+    }
+  });
+});

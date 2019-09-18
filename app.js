@@ -1,3 +1,4 @@
+const fetch = require("node-fetch");
 //Dependencies
 const express = require("express");
 const mysql = require("mysql");
@@ -73,38 +74,41 @@ app.listen(port, () => {
 
 //PUT - Still need to make copy of user object, multiple ifs to set updated variables, and then update SQL server
 app.put("/employees", (req, res) => {
-  sql.query("SELECT * FROM USERS WHERE employeeID=?", [`${req.query.id}`], (err, rows) => {
+  sql.query("SELECT * FROM USERS WHERE employeeID=?", [req.query.id], (err, rows) => {
     if (err) throw err;
     if (rows.length !== 0) {
       const employee = rows[0];
-      if (req.query.fname){
+      if (req.query.fname) {
         employee.fname = req.query.fname;
       }
-      if (req.query.lname){
+      if (req.query.lname) {
         employee.fname = req.query.lname;
       }
-      if (req.query.email){
-        employee.email = req.query.email; 
+      if (req.query.email) {
+        employee.email = req.query.email;
       }
-      if (req.query.phone){
+      if (req.query.phone) {
         employee.phone = req.query.phone;
       }
-      if (req.query.street){
+      if (req.query.street) {
         employee.street = req.query.street;
       }
-      if (req.query.city){
+      if (req.query.city) {
         employee.city = req.query.city;
       }
-      if (req.query.state){
+      if (req.query.state) {
         employee.state = req.query.state;
       }
-      if (req.query.dob){
+      if (req.query.dob) {
         employee.dob = req.query.dob;
       }
-      if (req.query.hireDate){
+      if (req.query.hireDate) {
         employee.hireDate = req.query.hireDate;
       }
-      res.send(employee);
+      sql.query("UPDATE users SET fname = ?, lname = ?, email = ?, phone = ?, street = ?, city = ?, state = ?, dob = ?, hireDate = ? WHERE employeeID = ?", [employee.fname, employee.lname, employee.email, employee.phone, employee.street, employee.city, employee.state, employee.dob, employee.hireDate, req.query.id], (err, data) => {
+        if (err) throw err;
+        res.send(employee);
+      });
     } else {
       res.status(404);
       res.send("Employee not found");

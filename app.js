@@ -72,7 +72,7 @@ app.listen(port, () => {
 
 });
 
-//PUT - Still need to make copy of user object, multiple ifs to set updated variables, and then update SQL server
+//PUT - Updates selected employee. ID is required
 app.put("/employees", (req, res) => {
   sql.query("SELECT * FROM USERS WHERE employeeID=?", [req.query.id], (err, rows) => {
     if (err) throw err;
